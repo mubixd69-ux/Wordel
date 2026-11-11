@@ -10,15 +10,16 @@ config_version=5
 
 [application]
 
-config/name="wordel"
+config/name="Wordel"
 run/main_scene="uid://c05wyb5cv2ajk"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
 [display]
 
+window/size/viewport_width=600
+window/size/viewport_height=800
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
 
 [editor_plugins]
 
