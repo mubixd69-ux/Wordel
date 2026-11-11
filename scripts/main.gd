@@ -8,7 +8,19 @@ var titles = []
 var current_row = 0
 var current_col = 0
 
+var words = [
+	"PIZZA", "BAGEL", "MANGO", "PASTA", "SUSHI", "TOAST",
+	"BREAD", "LEMON", "GRAPE", "CANDY", "PEACH", "SALAD",
+	"HORSE", "TIGER", "SHARK", "ZEBRA", "OTTER", "KOALA",
+	"EAGLE", "SNAKE", "MOUSE", "WHALE", "PANDA", "LLAMA",
+]
+
+var answer = "	"
+
 func _ready() -> void:
+	answer = words.pick_random()
+	print("answer: " + answer)
+	
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	
 	var bg = ColorRect.new()
