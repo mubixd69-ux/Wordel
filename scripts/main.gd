@@ -39,6 +39,14 @@ func _ready() -> void:
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
 	
+	var title = Label.new()
+	title.text = "Wordel"
+	title.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	title.offset_top = 70
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font size", 48)
+	add_child(title)
+	
 	var grid = GridContainer.new()
 	grid.columns = COLS
 	grid.add_theme_constant_override("h_separation", 6)
@@ -95,6 +103,7 @@ func add_letter(letter):
 	
 func submit_guess():
 	if current_col < COLS:
+		message_label.text = "Nout enough letters"
 		return
 	
 	var guess = ""
