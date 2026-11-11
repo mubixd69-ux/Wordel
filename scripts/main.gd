@@ -20,6 +20,8 @@ var words = [
 
 var answer = ""
 var valid_words = []
+var game_over = false
+var message_label
 
 func _ready() -> void:
 	load_valid_words()
@@ -58,9 +60,17 @@ func _ready() -> void:
 			box.add_child(label)
 			row_titles.append(box)
 		titles.append(row_titles)
+		
+		message_label = Label.new()
+		message_label.add_theme_font_size_override("font_size", 28)
+		message_label.position = Vector2(20, 20)
+		add_child(message_label)
 	
 func _input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed):
+		return
+	
+	if game_over:
 		return
 	
 	if event.keycode == KEY_BACKSPACE:
@@ -95,11 +105,19 @@ func submit_guess():
 	
 	check_guess()
 	
+	if guess == answer:
+		message_label.text = "You got it!"
+		game_over = true
+		return
+	
 	if current_row >= ROWS - 1:
+		message_label.text = "The word was " + answer
+		game_over = true
 		return
 	
 	current_row += 1
 	current_col = 0
+	message_label.text = ""
 	
 func delete_letter():
 	if current_col == 0:
