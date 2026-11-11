@@ -18,9 +18,11 @@ var words = [
 	"EAGLE", "SNAKE", "MOUSE", "WHALE", "PANDA", "LLAMA",
 ]
 
-var answer = "	"
+var answer = ""
+var valid_words = []
 
 func _ready() -> void:
+	load_valid_words()
 	answer = words.pick_random()
 	print("answer: " + answer)
 	
@@ -83,6 +85,14 @@ func submit_guess():
 	if current_col < COLS:
 		return
 	
+	var guess = ""
+	for i in COLS:
+		guess += titles[current_row][i].get_child(0).text
+	
+	if not (valid_words.has(guess) or words.has(guess)):
+		print("that is not a real word booo")
+		return
+	
 	check_guess()
 	
 	if current_row >= ROWS - 1:
@@ -127,8 +137,17 @@ func check_guess():
 	for i in COLS:
 		titles[current_row][i].color = colors[i]
 	
+func load_valid_words():
+	var file = FileAccess.open("res://assets/wordle-La.txt", FileAccess.READ)
+	if file == null:
+		print("i cnat find file ")
+		return
 	
-	
+	while not file.eof_reached():
+		var line = file.get_line().strip_edges().to_upper()
+		if line.length() == COLS:
+			valid_words.append(line)
+	print("loaded words: ", valid_words.size() )
 	
 	
 	
