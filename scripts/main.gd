@@ -46,8 +46,11 @@ func _input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed):
 		return
 	
-	if event.keycode >= KEY_A and event.keycode <= KEY_Z:
+	if event.keycode == KEY_ENTER:
+		submit_guess()
+	elif event.keycode >= KEY_A and event.keycode <= KEY_Z:
 		add_letter(char(event.keycode))
+	
 	
 func add_letter(letter):
 	if current_col >= COLS:
@@ -59,7 +62,15 @@ func add_letter(letter):
 	
 	current_col += 1
 	
+func submit_guess():
+	if current_col < COLS:
+		return
 	
+	if current_row >= ROWS - 1:
+		return
+	
+	current_row += 1
+	current_col = 0
 	
 	
 	
