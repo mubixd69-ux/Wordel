@@ -5,6 +5,9 @@ const COLS = 5
 
 var titles = []
 
+var current_row = 0
+var current_col = 0
+
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	
@@ -30,12 +33,31 @@ func _ready() -> void:
 			box.custom_minimum_size = Vector2(64, 64)
 			box.color = Color.DIM_GRAY
 			grid.add_child(box)
+			var label = Label.new()
+			label.set_anchors_preset(Control.PRESET_FULL_RECT)
+			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			label.add_theme_font_size_override("font_size", 32)
+			box.add_child(label)
 			row_titles.append(box)
 		titles.append(row_titles)
 	
+func _input(event: InputEvent) -> void:
+	if not (event is InputEventKey and event.pressed):
+		return
 	
+	if event.keycode >= KEY_A and event.keycode <= KEY_Z:
+		add_letter(char(event.keycode))
 	
+func add_letter(letter):
+	if current_col >= COLS:
+		return
 	
+	var box = titles[current_row][current_col]
+	var label = box.get_child(0)
+	label.text = letter
+	
+	current_col += 1
 	
 	
 	
