@@ -2,13 +2,15 @@ extends Control
 
 const ROWS = 6
 const COLS = 5
-const GREEN = Color("2a9d8f")
-const YELLOW = Color("e0a030")
-const GRAY = Color("3b3750")
-const EMPTY = Color("1e1b20")
-const BG = Color("14121f")
-const TEXT = Color("f4f1ff")
-const ACCENT = Color("b8a9ff")
+const GREEN = Color("6a994e")
+const YELLOW = Color("d4a72c")
+const GRAY = Color("4a5450")
+const EMPTY = Color("232c29")
+const BG = Color("1c2321")
+const TEXT = Color("ece8d8")
+const ACCENT = Color("d4a72c")
+const BORDER = Color("3a4743")
+const BORDER_TYPED = Color("d8d2bc")
 
 var titles = []
 
@@ -61,9 +63,9 @@ func _ready() -> void:
 	for row in ROWS:
 		var row_titles = []
 		for col in COLS:
-			var box = ColorRect.new()
+			var box = Panel.new()
 			box.custom_minimum_size = Vector2(64, 64)
-			box.color = EMPTY
+			set_tile_style(box, EMPTY, BORDER)
 			grid.add_child(box)
 			var label = Label.new()
 			label.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -105,6 +107,7 @@ func add_letter(letter):
 	var box = titles[current_row][current_col]
 	var label = box.get_child(0)
 	label.text = letter
+	set_tile_style(box, EMPTY, BORDER_TYPED)
 	
 	current_col += 1
 	
@@ -146,6 +149,7 @@ func delete_letter():
 	var box = titles[current_row][current_col]
 	var label = box.get_child(0)
 	label.text = ""
+	set_tile_style(box, EMPTY, BORDER)
 	
 
 func check_guess():
@@ -171,7 +175,7 @@ func check_guess():
 			leftover.erase(letter)
 	
 	for i in COLS:
-		titles[current_row][i].color = colors[i]
+		set_tile_style(titles[current_row][i], colors[i], colors[i])
 	
 func load_valid_words():
 	var file = FileAccess.open("res://assets/wordle-La.txt", FileAccess.READ)
@@ -185,6 +189,13 @@ func load_valid_words():
 			valid_words.append(line)
 	print("loaded words: ", valid_words.size() )
 	
+func set_tile_style(box, fill, border):
+	var style = StyleBoxFlat.new()
+	style.bg_color = fill
+	style.border_color = border
+	style.set_border_width_all(3)
+	style.set_corner_radius_all(2)
+	box.add_theme_stylebox_override("panel", style)
 	
 	
 	
