@@ -11,6 +11,7 @@ const TEXT = Color("ece8d8")
 const ACCENT = Color("d4a72c")
 const BORDER = Color("3a4743")
 const BORDER_TYPED = Color("d8d2bc")
+const FONT = preload("res://assets/SpaceMono-Bold.ttf")
 
 var titles = []
 
@@ -51,6 +52,7 @@ func _ready() -> void:
 	title.offset_top = 70
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font size", 48)
+	title.add_theme_font_override("font", FONT)
 	title.add_theme_color_override("font_color", TEXT)
 	add_child(title)
 	
@@ -72,6 +74,7 @@ func _ready() -> void:
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			label.add_theme_font_size_override("font_size", 32)
+			label.add_theme_font_override("font", FONT)
 			label.add_theme_color_override("font_color", TEXT)
 			box.add_child(label)
 			row_titles.append(box)
@@ -79,6 +82,7 @@ func _ready() -> void:
 		
 		message_label = Label.new()
 		message_label.add_theme_font_size_override("font_size", 28)
+		message_label.add_theme_font_override("font", FONT)
 		message_label.add_theme_color_override("font_color", ACCENT)
 		message_label.position = Vector2(20, 20)
 		add_child(message_label)
