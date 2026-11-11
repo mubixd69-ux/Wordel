@@ -71,6 +71,8 @@ func _input(event: InputEvent) -> void:
 		return
 	
 	if game_over:
+		if event.keycode == KEY_ENTER:
+			get_tree().reload_current_scene()
 		return
 	
 	if event.keycode == KEY_BACKSPACE:
@@ -117,7 +119,7 @@ func submit_guess():
 	
 	current_row += 1
 	current_col = 0
-	message_label.text = ""
+	message_label.text = ""	
 	
 func delete_letter():
 	if current_col == 0:
