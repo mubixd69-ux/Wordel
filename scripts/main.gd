@@ -46,7 +46,9 @@ func _input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed):
 		return
 	
-	if event.keycode == KEY_ENTER:
+	if event.keycode == KEY_BACKSPACE:
+		delete_letter()
+	elif event.keycode == KEY_ENTER:
 		submit_guess()
 	elif event.keycode >= KEY_A and event.keycode <= KEY_Z:
 		add_letter(char(event.keycode))
@@ -72,6 +74,13 @@ func submit_guess():
 	current_row += 1
 	current_col = 0
 	
+func delete_letter():
+	if current_col == 0:
+		return
 	
+	current_col -= 1
 	
+	var box = titles[current_row][current_col]
+	var label = box.get_child(0)
+	label.text = ""
 	
