@@ -2,6 +2,9 @@ extends Control
 
 const ROWS = 6
 const COLS = 5
+const GREEN = Color.GREEN
+const YELLOW = Color.YELLOW
+const GRAY = Color.DIM_GRAY
 
 var titles = []
 
@@ -43,7 +46,7 @@ func _ready() -> void:
 		for col in COLS:
 			var box = ColorRect.new()
 			box.custom_minimum_size = Vector2(64, 64)
-			box.color = Color.DIM_GRAY
+			box.color = Color.WEB_GRAY
 			grid.add_child(box)
 			var label = Label.new()
 			label.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -80,6 +83,8 @@ func submit_guess():
 	if current_col < COLS:
 		return
 	
+	check_guess()
+	
 	if current_row >= ROWS - 1:
 		return
 	
@@ -95,4 +100,36 @@ func delete_letter():
 	var box = titles[current_row][current_col]
 	var label = box.get_child(0)
 	label.text = ""
+	
+
+func check_guess():
+	var colors = []
+	for i in COLS:
+		colors.append(GRAY)
+		
+	var leftover = []
+	
+	for i in COLS:
+		var letter = titles[current_row][i].get_child(0).text
+		if letter == answer[i]:
+			colors[i] = GREEN
+		else:
+			leftover.append(answer[i])
+	
+	for i in COLS:
+		if colors[i] == GREEN:
+			continue
+		var letter = titles[current_row][i].get_child(0).text
+		if leftover.has(letter):
+			colors[i] = YELLOW
+			leftover.erase(letter)
+	
+	for i in COLS:
+		titles[current_row][i].color = colors[i]
+	
+	
+	
+	
+	
+	
 	
