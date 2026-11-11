@@ -2,9 +2,13 @@ extends Control
 
 const ROWS = 6
 const COLS = 5
-const GREEN = Color.GREEN
-const YELLOW = Color.YELLOW
-const GRAY = Color.DIM_GRAY
+const GREEN = Color("2a9d8f")
+const YELLOW = Color("e0a030")
+const GRAY = Color("3b3750")
+const EMPTY = Color("1e1b20")
+const BG = Color("14121f")
+const TEXT = Color("f4f1ff")
+const ACCENT = Color("b8a9ff")
 
 var titles = []
 
@@ -31,7 +35,7 @@ func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	
 	var bg = ColorRect.new()
-	bg.color = Color.BLACK
+	bg.color = BG
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	
@@ -45,6 +49,7 @@ func _ready() -> void:
 	title.offset_top = 70
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font size", 48)
+	title.add_theme_color_override("font_color", TEXT)
 	add_child(title)
 	
 	var grid = GridContainer.new()
@@ -58,19 +63,21 @@ func _ready() -> void:
 		for col in COLS:
 			var box = ColorRect.new()
 			box.custom_minimum_size = Vector2(64, 64)
-			box.color = Color.WEB_GRAY
+			box.color = EMPTY
 			grid.add_child(box)
 			var label = Label.new()
 			label.set_anchors_preset(Control.PRESET_FULL_RECT)
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			label.add_theme_font_size_override("font_size", 32)
+			label.add_theme_color_override("font_color", TEXT)
 			box.add_child(label)
 			row_titles.append(box)
 		titles.append(row_titles)
 		
 		message_label = Label.new()
 		message_label.add_theme_font_size_override("font_size", 28)
+		message_label.add_theme_color_override("font_color", ACCENT)
 		message_label.position = Vector2(20, 20)
 		add_child(message_label)
 	
