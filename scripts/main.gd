@@ -122,6 +122,7 @@ func add_letter(letter):
 	var label = box.get_child(0)
 	label.text = letter
 	set_tile_style(box, EMPTY, BORDER_TYPED)
+	pop_tile(box)
 	
 	current_col += 1
 	
@@ -225,4 +226,10 @@ func flip_tile(box, color, delay):
 	tween.tween_callback(set_tile_style.bind(box, color, color))
 	tween.tween_property(box, "scale:y", 1.0, 0.2)
 
+func pop_tile(box):
+	box.pivot_offset = box.size / 2
+	
+	var tween = create_tween()
+	tween.tween_property(box, "scale", Vector2(1.1, 1.1), 0.06)
+	tween.tween_property(box, "scale", Vector2(1.0, 1.0), 0.06)
 	
