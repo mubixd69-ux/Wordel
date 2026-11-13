@@ -29,6 +29,7 @@ var answer = ""
 var valid_words = []
 var game_over = false
 var message_label
+var message_tween
 var busy = false
 
 func _ready() -> void:
@@ -128,7 +129,7 @@ func add_letter(letter):
 	
 func submit_guess():
 	if current_col < COLS:
-		message_label.text = "Nout enough letters"
+		show_message("Not enough letters")
 		shake_row()
 		return
 	
@@ -137,7 +138,7 @@ func submit_guess():
 		guess += titles[current_row][i].get_child(0).text
 	
 	if not (valid_words.has(guess) or words.has(guess)):
-		message_label.text = "that is not a real word booo"
+		show_message("Not a real word breuwww")
 		shake_row()
 		return
 	
@@ -145,13 +146,13 @@ func submit_guess():
 	await check_guess()
 	
 	if guess == answer:
-		message_label.text = "You got it!"
+		show_message("You got it!", false)
 		bounce_row()
 		game_over = true
 		return
 	
 	if current_row >= ROWS - 1:
-		message_label.text = "The word was " + answer
+		show_message("The word was " + answer, false)
 		game_over = true
 		return
 	
@@ -263,3 +264,16 @@ func bounce_row():
 		tween.tween_interval(i * 0.1)
 		tween.tween_property(box, "position:y", y - 20, 0.15)
 		tween.tween_property(box, "position:y", y, 0.15)
+
+func show_message(text, fade = true):
+	if message_tween:
+		message_tween.kill()
+	
+	message_label.text = text
+	message_label.modulate.a = 1.0
+	
+	if fade:
+		message_tween = create_tween()
+		message_tween.tween_interval(1.5)
+		message_tween.tween_property(message_label, "modulate:a", 0.0, 0.2)
+	
