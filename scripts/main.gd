@@ -29,6 +29,7 @@ var answer = ""
 var valid_words = []
 var game_over = false
 var message_label
+var busy = false
 
 func _ready() -> void:
 	load_valid_words()
@@ -95,7 +96,10 @@ func _ready() -> void:
 	
 func _input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed):
-		return	
+		return
+	
+	if busy:
+		return
 	
 	if game_over:
 		if event.keycode == KEY_ENTER:
@@ -135,6 +139,7 @@ func submit_guess():
 		return
 	
 	check_guess()
+	await check_guess()
 	
 	if guess == answer:
 		message_label.text = "You got it!"
@@ -184,9 +189,13 @@ func check_guess():
 			colors[i] = YELLOW
 			leftover.erase(letter)
 	
+	busy = true
 	for i in COLS:
-		set_tile_style(titles[current_row][i], colors[i], colors[i])
+		flip_tile(titles[current_row][i], colors[i], i * 0.25)
 	
+	await get_tree().create_timer(1.4).timeout
+	busy = false
+
 func load_valid_words():
 	var file = FileAccess.open("res://assets/wordle-La.txt", FileAccess.READ)
 	if file == null:
@@ -207,5 +216,13 @@ func set_tile_style(box, fill, border):
 	style.set_corner_radius_all(2)
 	box.add_theme_stylebox_override("panel", style)
 	
+func flip_tile(box, color, delay):
+	box.pivot_offset = box.size / 2
 	
+	var tween = create_tween()
+	tween.tween_interval(delay)
+	tween.tween_property(box, "scale:y", 0.0, 0.2)
+	tween.tween_callback(set_tile_style.bind(box, color, color))
+	tween.tween_property(box, "scale:y", 1.0, 0.2)
+
 	
