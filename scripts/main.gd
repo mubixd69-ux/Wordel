@@ -129,6 +129,7 @@ func add_letter(letter):
 func submit_guess():
 	if current_col < COLS:
 		message_label.text = "Nout enough letters"
+		shake_row()
 		return
 	
 	var guess = ""
@@ -137,6 +138,7 @@ func submit_guess():
 	
 	if not (valid_words.has(guess) or words.has(guess)):
 		message_label.text = "that is not a real word booo"
+		shake_row()
 		return
 	
 	check_guess()
@@ -233,3 +235,20 @@ func pop_tile(box):
 	tween.tween_property(box, "scale", Vector2(1.1, 1.1), 0.06)
 	tween.tween_property(box, "scale", Vector2(1.0, 1.0), 0.06)
 	
+
+func shake_row():
+	busy = true
+	
+	for i in COLS:
+		var box = titles[current_row][i]
+		var x = box.position.x
+		
+		var tween = create_tween()
+		tween.tween_property(box, "position:x", x + 8, 0.05)
+		tween.tween_property(box, "position:x", x - 8, 0.05)
+		tween.tween_property(box, "position:x", x + 5, 0.05)
+		tween.tween_property(box, "position:x", x - 5, 0.05)
+		tween.tween_property(box, "position:x", x, 0.05)
+	
+	await get_tree().create_timer(0.3).timeout
+	busy = false
