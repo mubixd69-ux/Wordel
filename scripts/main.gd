@@ -12,9 +12,13 @@ const ACCENT = Color("d4a72c")
 const BORDER = Color("3a4743")
 const BORDER_TYPED = Color("d8d2bc")
 const FONT = preload("res://assets/SpaceMono-Bold.ttf")
+const CLICK = preload("res://assets/Audio/click_003.ogg")
+const DELETE_SOUND = preload("res://assets/Audio/click_002.ogg")
+const ENTER_SOUND = preload("res://assets/Audio/click_004.ogg")
+const ERROR_SOUND = preload("res://assets/Audio/back_002.ogg")
+const CORRECT_SOUND = preload("res://assets/Audio/confirmation_001.ogg")
 
 var titles = []
-
 var current_row = 0
 var current_col = 0
 
@@ -30,6 +34,11 @@ var valid_words = []
 var game_over = false
 var message_label
 var message_tween
+var click_player
+var delete_player
+var enter_player
+var error_player
+var correct_player
 var busy = false
 
 func _ready() -> void:
@@ -95,6 +104,27 @@ func _ready() -> void:
 	message_label.custom_minimum_size = Vector2(344, 70)
 	column.add_child(message_label)
 	
+	click_player = AudioStreamPlayer.new()
+	click_player.stream = CLICK
+	add_child(click_player)
+	
+	delete_player = AudioStreamPlayer.new()
+	delete_player.stream = DELETE_SOUND
+	add_child(delete_player)
+	
+	correct_player = AudioStreamPlayer.new()
+	correct_player.stream = CORRECT_SOUND
+	add_child(correct_player)
+	
+	enter_player = AudioStreamPlayer.new()
+	enter_player.stream = ENTER_SOUND
+	add_child(enter_player)
+	
+	error_player = AudioStreamPlayer.new()
+	error_player.stream = ERROR_SOUND
+	error_player.volume_db = -8
+	add_child(error_player)
+	
 func _input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed):
 		return
@@ -124,12 +154,15 @@ func add_letter(letter):
 	label.text = letter
 	set_tile_style(box, EMPTY, BORDER_TYPED)
 	pop_tile(box)
+	click_player.pitch_scale = randf_range(0.9, 1.1)
+	click_player.play()
 	
 	current_col += 1
 	
 func submit_guess():
 	if current_col < COLS:
 		show_message("Not enough letters")
+		error_player.play()
 		shake_row()
 		return
 	
@@ -139,14 +172,16 @@ func submit_guess():
 	
 	if not (valid_words.has(guess) or words.has(guess)):
 		show_message("Not a real word breuwww")
+		error_player.play()
 		shake_row()
 		return
 	
-	check_guess()
+	enter_player.play()
 	await check_guess()
 	
 	if guess == answer:
 		show_message("You got it!", false)
+		correct_player.play()
 		bounce_row()
 		game_over = true
 		return
@@ -170,6 +205,8 @@ func delete_letter():
 	var label = box.get_child(0)
 	label.text = ""
 	set_tile_style(box, EMPTY, BORDER)
+	
+	delete_player.play()
 	
 
 func check_guess():
