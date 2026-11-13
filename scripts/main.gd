@@ -146,6 +146,7 @@ func submit_guess():
 	
 	if guess == answer:
 		message_label.text = "You got it!"
+		bounce_row()
 		game_over = true
 		return
 	
@@ -252,3 +253,13 @@ func shake_row():
 	
 	await get_tree().create_timer(0.3).timeout
 	busy = false
+
+func bounce_row():
+	for i in COLS:
+		var box = titles[current_row][i]
+		var y = box.position.y
+		
+		var tween = create_tween()
+		tween.tween_interval(i * 0.1)
+		tween.tween_property(box, "position:y", y - 20, 0.15)
+		tween.tween_property(box, "position:y", y, 0.15)
